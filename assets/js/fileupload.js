@@ -1,40 +1,39 @@
-'use strict';
-
 require('blueimp-file-upload/js/jquery.fileupload');
 
 
-$(function() {
+$(() => {
+  'use strict';
 
-  $('.direct-upload').find('input:file').each(function(i, elem) {
-    var fileInput = $(elem);
-    var form = $(fileInput.parents('form:first'));
-    var submitButton = form.find('[type="submit"]');
-    var progressText = submitButton.find('.progress-text');
-    var contentTypeInput = $('<input type="hidden" name="Content-Type" />').prependTo(form);
+  $('.direct-upload').find('input:file').each((i, elem) => {
+    const fileInput = $(elem);
+    const form = $(fileInput.parents('form:first'));
+    const submitButton = form.find('[type="submit"]');
+    const progressText = submitButton.find('.progress-text');
+    const contentTypeInput = $('<input type="hidden" name="Content-Type" />').prependTo(form);
 
     fileInput.fileupload({
-      fileInput: fileInput,
+      fileInput,
       url: form.data('url'),
       type: 'POST',
       autoUpload: false,
       multipart: true,
       replaceFileInput: false,
-      add: function (e, data) {
-        var contentType = data.files[0].type;
+      add(_, data) {
+        const contentType = data.files[0].type;
         contentTypeInput.attr('value', contentType);
 
-        form.off('submit').on('submit', function (e) {
+        form.off('submit').on('submit', (e) => {
           e.preventDefault();
           data.submit();
         });
       },
-      progressall: function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        progressText.text(progress + '%')
+      progressall(e, data) {
+        const progress = parseInt((data.loaded / data.total) * 100, 10);
+        progressText.text(`${progress}%`);
       },
-      start: function (e) {
+      start() {
         submitButton.prop('disabled', true);
-        progressText.text('0%')
+        progressText.text('0%');
       },
       done: _addResponseAndSubmit(form),
       fail: _addResponseAndSubmit(form),
@@ -43,12 +42,12 @@ $(function() {
 
   function _addResponseAndSubmit(form) {
     return function (e, data) {
-      var response = $('<input />', {
+      const response = $('<input />', {
         type: 'hidden',
         name: 'response',
         value: data.jqXHR.responseText,
       });
-      var responseStatus = $('<input />', {
+      const responseStatus = $('<input />', {
         type: 'hidden',
         name: 'responseStatus',
         value: data.jqXHR.status,
@@ -56,7 +55,6 @@ $(function() {
       form.append(response, responseStatus);
 
       form.off('submit').submit();
-    }
+    };
   }
-
 });

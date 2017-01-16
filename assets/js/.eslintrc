@@ -1,0 +1,13 @@
+---
+extends: ../../.eslintrc
+env:
+  browser: true
+globals:
+  $: false
+  OPENTRIALS_API_URL: false
+rules:
+  strict:
+    - error
+    - function
+  func-names:
+    - off

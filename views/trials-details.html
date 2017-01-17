@@ -200,6 +200,12 @@
   <h2>
     Documents
   </h2>
+  {% if trial.results_exemption_date %}
+    <p class='note'>
+      On {{ trial.results_exemption_date | formatDate }} this trial has received
+      an exemption from publishing the results.
+    </p>
+  {% endif %}
   <p>
     {% for category, documents in trial.documents %}
       <section class="document-list">
